@@ -5,17 +5,17 @@ import * as authRepo from './auth.repository.js';
 
 export async function register(req, res, next) {
     try {
-        const { email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
 
-        if (! email || ! password)
-            return res.status(400).json({ message: 'Email and password are required' });
+        if (! email || ! password || ! firstName || ! lastName)
+            return res.status(400).json({ message: 'First & Last name, email and password are required' });
 
         const existing = await authRepo.findUserByEmail(email);
         if (existing)
             return res.status(400).json({ message: 'Email already registered' });
 
         const passwordHash = await bcrypt.hash(password, 10);
-        await authRepo.createUser({ email, passwordHash });
+        await authRepo.createUser({ firstName, lastName, email, passwordHash });
 
         res.status(201).json({ message: 'Registered successfully' });
     } catch (err) {

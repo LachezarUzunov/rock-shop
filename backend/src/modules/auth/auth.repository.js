@@ -6,9 +6,11 @@ export function findUserByEmail(email) {
         .first();
 }
 
-export function createUser({ email, passwordHash }) {
+export function createUser({ firstName, lastName, email, passwordHash }) {
     return db('users')
         .insert({
+            first_name: firstName,
+            last_name: lastName,
             email,
             password: passwordHash
         })

@@ -1,7 +1,11 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { auth } from '@/store/auth.js';
 import { Button } from "@/components/ui/button.jsx";
+import { toast } from 'sonner';
 
 export default function AppLayout() {
+    const navigate = useNavigate();
+
     return (
         <div className='min-h-screen bg-zinc-950 text-zinc-100 flex flex-col'>
 
@@ -27,9 +31,33 @@ export default function AppLayout() {
                         </NavLink>
                     </nav>
 
-                    <Button variant='outline' className='border-red-500 text-red-400 hover:bg-red-600 hover:text-white'>
-                        Login
-                    </Button>
+                    { auth.isAuthenticated() ? (
+                        <div className='flex items-center gap-4'>
+                            <span className='text-zinc-400'>{auth.user.value.email}</span>
+                            <Button
+                                variant='outline'
+                                className='border-red-500 text-red-400'
+                                onClick={() => {
+                                    auth.logout();
+                                    toast.info('Logged out');
+                                    navigate('/login')
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button
+                            variant="outline"
+                            className="border-red-500 text-red-400"
+                            onClick={() => navigate("/login")}
+                        >
+                            Login
+                        </Button>
+                    )}
+                    {/*<Button variant='outline' className='border-red-500 text-red-400 hover:bg-red-600 hover:text-white'>*/}
+                    {/*    Login*/}
+                    {/*</Button>*/}
                 </div>
             </header>
 

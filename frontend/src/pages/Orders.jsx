@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { http } from '../api/http.js';
+import { auth } from '@/store/auth.js';
+import { Navigate } from "react-router-dom";
 
 export default function Orders() {
+    if (! auth.isAuthenticated()) return <Navigate to='/login' />;
+
     const { data, isLoading, error } = useQuery({
         queryKey: ['orders'],
         queryFn: () =>

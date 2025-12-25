@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Toast } from '@/components/ui/toast.jsx'
+import { toast } from 'sonner'
 import { http } from '../api/http.js';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.jsx";
 import { Button } from "@/components/ui/button.jsx";
@@ -10,7 +10,7 @@ export default function Products() {
         queryKey: ['products'],
         queryFn: () => http.get('http://localhost:3000/products').then(res => res.data)
     })
-    console.log(data);
+
     const mutation = useMutation({
         mutationFn: (productId) =>
             http.post('http://localhost:3000/orders', {
@@ -18,13 +18,13 @@ export default function Products() {
                 productId,
             }),
         onSuccess: () => {
-            Toast('Order created!', {
+            toast.success('Order created!', {
                 description: 'Your rock merch is on the way!'
             });
             queryClient.invalidateQueries(['orders']);
         },
         onError: () => {
-            Toast('Failed', {
+            toast.error('Failed', {
                 description: 'Could not create order'
             })
         }
